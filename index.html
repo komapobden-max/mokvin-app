@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Архив Моквин</title>
+    <!-- Подключаем библиотеку Telegram Web App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #18222d);
+            --text-color: var(--tg-theme-text-color, #ffffff);
+            --btn-bg: var(--tg-theme-button-color, #2ea6ff);
+            --btn-text: var(--tg-theme-button-text-color, #ffffff);
+            --card-bg: #232e3c;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .header {
+            text-align: center;
+            padding: 10px 0 20px 0;
+            border-bottom: 1px solid #334155;
+        }
+        .header h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
+        .header p { margin: 5px 0 0 0; font-size: 14px; color: #94a3b8; }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            outline: none;
+        }
+        .search-box button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            border: 1px solid #334155;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .card:active { transform: scale(0.97); }
+        .card span { font-size: 24px; display: block; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🏭 АРХИВ МОКВИН</h1>
+        <p>Система управления документацией</p>
+    </div>
+
+    <div class="section-title">Быстрый поиск чертежей</div>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Название или шифр...">
+        <button onclick="sendSearch()">Искать</button>
+    </div>
+
+    <div class="section-title">База оборудования (Цеха)</div>
+    <div class="grid">
+        <div class="card" onclick="sendShop('АКБ')">
+            <span>🔋</span> Цех АКБ
+        </div>
+        <div class="card" onclick="sendShop('ВТУ')">
+            <span>🔥</span> Цех ВТУ
+        </div>
+        <div class="card" onclick="sendShop('РУ')">
+            <span>⚙️</span> Цех РУ
+        </div>
+    </div>
+
+    <script>
+        // Инициализация Telegram Web App
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачиваем на весь экран
+
+        // Функция отправки выбранного цеха в бота
+        function sendShop(shopName) {
+            let data = {
+                action: 'open_shop',
+                shop: shopName
+            };
+            tg.sendData(JSON.stringify(data));
+        }
+
+        // Функция отправки поискового запроса
+        function sendSearch() {
+            let query = document.getElementById('searchInput').value;
+            if (query.trim() === '') return;
+            
+            let data = {
+                action: 'search',
+                text: query
+            };
+            tg.sendData(JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>
